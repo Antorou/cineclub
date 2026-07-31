@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Film, User, SwitchRight } from 'lucide-react';
+import { Film, User, ArrowRightLeft } from 'lucide-react';
 import { UserContext } from '../context/UserContext';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
@@ -21,7 +21,7 @@ const Navbar = () => {
           <span>Viewing as: <strong>{activeUser}</strong></span>
         </div>
         <button className="btn-switch" onClick={toggleUser} title="Switch User">
-          <SwitchRight size={20} />
+          <ArrowRightLeft size={20} />
         </button>
       </div>
     </header>

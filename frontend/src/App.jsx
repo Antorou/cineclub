@@ -3,17 +3,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
+import Upload from './pages/Upload';
 
 function App() {
   return (
-    // The UserProvider wraps the whole app, giving everything access to the UserContext!
     <UserProvider>
       <Router>
         <div className="app-container">
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* We will add /upload and /movie/:id routes here very soon! */}
+            <Route path="/upload" element={<Upload />} />
+            {/* We will add /movie/:id route here later for the PDF viewer! */}
           </Routes>
         </div>
       </Router>

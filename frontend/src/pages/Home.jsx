@@ -4,7 +4,7 @@ import { PlusCircle, PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const { activeUser } = useContext(UserContext);
+  const { activeUser, token } = useContext(UserContext);
   
   // React State: We hold our movies array locally once loaded from the server
   const [movies, setMovies] = useState([]);
@@ -12,7 +12,11 @@ const Home = () => {
 
   // React useEffect: Used for fetching data the instant the component loads onto the screen!
   useEffect(() => {
-    fetch('http://localhost:5005/api/movies')
+    fetch('http://localhost:5005/api/movies', {
+      headers: {
+        'Authorization': `Bearer ${token}` // Flashing our VIP wristband to heavily-secured Express!
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setMovies(data);

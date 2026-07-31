@@ -1,24 +1,49 @@
 import React, { createContext, useState } from 'react';
 
-// We create a global 'Context' to hold our active User state.
-// This allows ANY component in our app to know if Antoine or Léa is currently using it, 
-// without having to pass data down manually through every component.
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [activeUser, setActiveUser] = useState(() => {
-    // Read from localStorage to remember who was logged in even after browser refreshes!
-    return localStorage.getItem('cineclubUser') || 'Antoine';
-  });
+  const [activeUser, setActiveUser] = useState(() => localStorage.getItem('cineclubUser') || null);
+  // NEW: We now manage the JWT cryptographic token securely provided by our Node.js server!
+  const [token, setToken] = useState(() => localStorage.getItem('cineclubToken') || null);
 
-  const toggleUser = () => {
-    const newUser = activeUser === 'Antoine' ? 'Léa' : 'Antoine';
-    setActiveUser(newUser);
-    localStorage.setItem('cineclubUser', newUser);
+  const login = async (username, password) => {
+    try {
+      // Physically query our robust internal backend to verify!
+      const response = await fetch('http://localhost:5005/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json(); // Safely unpack the resulting JSON
+        
+        setActiveUser(data.username);
+        setToken(data.token);
+        
+        // Save the magical VIP wristband so we don't log out immediately on a page refresh!
+        localStorage.setItem('cineclubUser', data.username); 
+        localStorage.setItem('cineclubToken', data.token); 
+        return true; 
+      }
+      return false; // Express specifically rejected our password!
+    } catch (error) {
+       console.error("Login Server Error: ", error);
+       return false;
+    }
   };
 
+  const logout = () => {
+    setActiveUser(null);
+    setToken(null);
+    localStorage.removeItem('cineclubUser'); 
+    localStorage.removeItem('cineclubToken'); // Rip off the VIP wristband!
+  };
+
+  // We explicitly make the 'token' available globally so other pages can attach it to requests!
   return (
-    <UserContext.Provider value={{ activeUser, toggleUser }}>
+    <UserContext.Provider value={{ activeUser, token, login, logout }}>
       {children}
     </UserContext.Provider>
   );

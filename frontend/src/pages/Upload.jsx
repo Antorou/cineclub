@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UploadCloud } from 'lucide-react';
 
 const Upload = () => {
-  const { activeUser } = useContext(UserContext);
+  const { activeUser, token } = useContext(UserContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   
@@ -36,9 +36,12 @@ const Upload = () => {
     }
 
     try {
-      // POST out to our Express API!
+      // POST out securely to our Express API!
       const response = await fetch('http://localhost:5005/api/movies', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}` // Include our secure VIP wristband!
+        },
         body: data,
       });
 

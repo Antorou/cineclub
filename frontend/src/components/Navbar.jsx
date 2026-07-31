@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Film, User, LogOut } from 'lucide-react';
 import { UserContext } from '../context/UserContext';
 import { Link } from 'react-router-dom';

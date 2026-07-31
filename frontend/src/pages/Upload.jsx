@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud } from 'lucide-react';
@@ -36,8 +36,9 @@ const Upload = () => {
     }
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
       // POST out securely to our Express API!
-      const response = await fetch('http://localhost:5005/api/movies', {
+      const response = await fetch(`${API_URL}/api/movies`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Include our secure VIP wristband!

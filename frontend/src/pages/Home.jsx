@@ -1,32 +1,41 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { PlusCircle, PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const { activeUser, token } = useContext(UserContext);
+  const { activeUser, token, logout } = useContext(UserContext);
   
   // React State: We hold our movies array locally once loaded from the server
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPdfUrl, setSelectedPdfUrl] = useState(null);
 
   // React useEffect: Used for fetching data the instant the component loads onto the screen!
   useEffect(() => {
-    fetch('http://localhost:5005/api/movies', {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
+    fetch(`${API_URL}/api/movies`, {
       headers: {
         'Authorization': `Bearer ${token}` // Flashing our VIP wristband to heavily-secured Express!
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401) {
+          logout(); // Automatically trigger completely clean logout if database rejects our token
+          throw new Error("Unauthorized - Token Expired");
+        }
+        return res.json();
+      })
       .then(data => {
-        setMovies(data);
+        setMovies(Array.isArray(data) ? data : []);
         setLoading(false); // Disable loading spinner instantly once data arrives
       })
       .catch(err => {
         console.error("Error communicating with Express API!", err);
+        setMovies([]); // Ensure movies remains an array even on network failure
         setLoading(false);
       });
-  }, []); // The empty brackets [] mean "Only run this code ONCE when page loads"
+  }, [token, logout]); // The brackets [] mean "Only run this code ONCE when page loads", but we include dependencies cleanly for linter
 
   return (
     <div className="home-container animate-fade-in">
@@ -77,16 +86,51 @@ const Home = () => {
                        : 'No Rating'} 
                  </span>
                  
-                 {/* For now this button doesn't do anything, we will build the Movie Viewer page next! */}
-                 <button className="btn-switch" style={{ width: 'auto', padding: '8px 16px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                   View <PlayCircle size={16} />
-                 </button>
+                 {/* Opens the PDF inside our automated modal viewer! */}
+                 {movie.diaporama_url && (
+                   <button 
+                     onClick={() => setSelectedPdfUrl(movie.diaporama_url)}
+                     className="btn-switch" 
+                     style={{ width: 'auto', padding: '8px 16px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                   >
+                     View <PlayCircle size={16} />
+                   </button>
+                 )}
               </div>
             </div>
+
           ))
         )}
 
       </div>
+
+      {/* PDF Modal Viewer */}
+      {selectedPdfUrl && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
+          backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1000,
+          display: 'flex', flexDirection: 'column', padding: '2rem',
+          backdropFilter: 'blur(8px)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', alignItems: 'center' }}>
+            <h3 style={{ color: 'white', fontSize: '1.5rem', fontFamily: 'Outfit' }}>Presentation Viewer</h3>
+            <button 
+              onClick={() => setSelectedPdfUrl(null)}
+              className="btn-primary"
+              style={{ background: 'rgba(239, 68, 68, 0.8)', padding: '8px 20px' }}
+            >
+              Close Viewer
+            </button>
+          </div>
+          <iframe 
+            src={selectedPdfUrl} 
+            width="100%" 
+            height="100%" 
+            style={{ border: 'none', borderRadius: '12px', backgroundColor: 'white', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} 
+            title="PDF Presentation"
+          />
+        </div>
+      )}
     </div>
   );
 };

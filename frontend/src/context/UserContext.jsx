@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState } from 'react';
 
 export const UserContext = createContext();
 
@@ -10,7 +11,8 @@ export const UserProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       // Physically query our robust internal backend to verify!
-      const response = await fetch('http://localhost:5005/api/auth/login', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })

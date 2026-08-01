@@ -84,7 +84,47 @@ const createMovie = async (req, res) => {
   }
 };
 
+const updateReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { score, review } = req.body;
+    const username = req.user.username; // extracted entirely from the secure JWT!
+
+    if (!id || score === undefined) {
+      return res.status(400).json({ error: 'Movie ID and Score are required.' });
+    }
+
+    // Determine which columns to explicitly modify based purely on secure cryptography!
+    const updatePayload = {};
+    if (username === 'Antoine') {
+      updatePayload.antoine_score = parseInt(score);
+      updatePayload.antoine_review = review || '';
+    } else if (username === 'Léa') {
+      updatePayload.lea_score = parseInt(score);
+      updatePayload.lea_review = review || '';
+    } else {
+      return res.status(403).json({ error: 'Access implicitly denied: Unknown user profile.' });
+    }
+
+    // Perform database UPDATE
+    const { data, error } = await supabase
+      .from('movies')
+      .update(updatePayload)
+      .eq('id', id)
+      .select();
+
+    if (error) throw error;
+    if (data.length === 0) return res.status(404).json({ error: 'Movie strictly not found.' });
+    
+    res.json(data[0]); // Return the freshly updated row!
+  } catch (error) {
+    console.error('Error in updateReview:', error);
+    res.status(500).json({ error: 'Failed to accurately update database scorecards.' });
+  }
+};
+
 module.exports = {
   getAllMovies,
-  createMovie
+  createMovie,
+  updateReview
 };

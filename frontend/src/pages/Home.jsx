@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { PlusCircle, PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Scorecard from '../components/Scorecard';
 
 const Home = () => {
   const { activeUser, token, logout } = useContext(UserContext);
@@ -97,6 +98,8 @@ const Home = () => {
                    </button>
                  )}
               </div>
+              
+              <Scorecard movie={movie} token={token} activeUser={activeUser} />
             </div>
 
           ))

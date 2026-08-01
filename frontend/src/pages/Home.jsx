@@ -162,16 +162,22 @@ const Home = () => {
               <div key={movie.id} className="confetti-card" style={{ backgroundColor: surfaceColor, color: textColor }}>
                 <h3 className="hero-display" style={{ fontSize: '40px', margin: '0 0 10px 0', lineHeight: 1 }}>{movie.title}</h3>
 
+                {movie.poster_url && (
+                  <div style={{ width: '100%', height: '300px', marginBottom: '20px', borderRadius: '4px', overflow: 'hidden', border: `2px solid ${textColor}` }}>
+                    <img src={movie.poster_url} alt={movie.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '40px', flexWrap: 'wrap' }}>
                   <span className="mono-label" style={{ borderColor: textColor }}>{movie.genre || 'AUCUN'}</span>
-                  <span className="mono-label" style={{ backgroundColor: 'transparent', border: '1px solid transparent' }}>PAR {movie.presenter}</span>
+                  <span className="mono-label" style={{ backgroundColor: 'transparent', border: '1px solid transparent' }}>PAR <strong style={{ fontFamily: 'var(--font-degulardisplay-bold)' }}>{movie.presenter}</strong></span>
                 </div>
 
                 <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                    <span className="mono-label" style={{ background: textColor, color: surfaceColor, borderColor: textColor }}>
-                      ★ {(movie.antoine_score || movie.lea_score)
-                         ? (((movie.antoine_score || 0) + (movie.lea_score || 0)) / ((movie.antoine_score ? 1 : 0) + (movie.lea_score ? 1 : 0))).toFixed(1)
-                         : 'PAS DE NOTE'}
+                      ★ {(movie.antoine_score !== null && movie.antoine_score !== undefined || movie.lea_score !== null && movie.lea_score !== undefined)
+                         ? (((movie.antoine_score || 0) + (movie.lea_score || 0)) / ((movie.antoine_score !== null && movie.antoine_score !== undefined ? 1 : 0) + (movie.lea_score !== null && movie.lea_score !== undefined ? 1 : 0))).toFixed(1)
+                         : 'N/A'}
                    </span>
 
                    <div style={{ display: 'flex', gap: '8px' }}>
@@ -203,7 +209,7 @@ const Home = () => {
                          className="gate-pill-btn"
                          style={{ padding: '8px 16px', fontSize: '12px' }}
                        >
-                         LIRE LE PDF
+                         VOIR
                        </button>
                      )}
                    </div>

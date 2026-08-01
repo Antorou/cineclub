@@ -14,6 +14,7 @@ const Upload = () => {
     duration_minutes: ''
   });
   const [file, setFile] = useState(null);
+  const [posterFile, setPosterFile] = useState(null);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -25,10 +26,14 @@ const Upload = () => {
     data.append('title', formData.title);
     data.append('genre', formData.genre);
     data.append('duration_minutes', formData.duration_minutes);
+    data.append('duration_minutes', formData.duration_minutes);
     data.append('presenter', activeUser); 
     
     if (file) {
       data.append('pdf', file);
+    }
+    if (posterFile) {
+      data.append('poster', posterFile);
     }
 
     try {
@@ -74,6 +79,13 @@ const Upload = () => {
           <div style={{ flex: '1 1 200px' }}>
             <label>DURÉE (MIN)</label>
             <input type="number" name="duration_minutes" value={formData.duration_minutes} onChange={handleChange} placeholder="164" />
+          </div>
+        </div>
+
+        <div>
+          <label>AFFICHE (FILM POSTER) *</label>
+          <div style={{ border: '2px dashed var(--color-ink-black)', padding: '20px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
+            <input type="file" accept="image/*" onChange={(e) => setPosterFile(e.target.files[0])} style={{ border: 'none', padding: 0 }} />
           </div>
         </div>
 

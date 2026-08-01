@@ -2,7 +2,7 @@ const supabase = require('../config/supabase');
 
 // --- Helper Functions ---
 // We can consider this our 'Service' layer. It handles external API interactions.
-const uploadPdfToStorage = async (file) => {
+const uploadFileToStorage = async (file) => {
   if (!file) return null;
 
   // Create a fairly unique file name, stripping out weird characters
@@ -13,7 +13,7 @@ const uploadPdfToStorage = async (file) => {
     .storage
     .from('diaporamas')
     .upload(fileName, file.buffer, {
-      contentType: 'application/pdf',
+      contentType: file.mimetype || 'application/octet-stream',
       upsert: false
     });
 
@@ -50,7 +50,10 @@ const getAllMovies = async (req, res) => {
 const createMovie = async (req, res) => {
   try {
     const { title, genre, duration_minutes, presenter } = req.body;
-    const file = req.file; // This is extracted automatically by our 'multer' middleware
+    
+    // Check if files array is present (now an object mapping due to upload.fields)
+    const pdfFile = req.files?.pdf ? req.files.pdf[0] : null;
+    const posterFile = req.files?.poster ? req.files.poster[0] : null;
 
     if (!title || !presenter) {
       return res.status(400).json({ error: 'Title and Presenter are absolutely required.' });
@@ -58,8 +61,12 @@ const createMovie = async (req, res) => {
 
     // Step 1: Upload the file if one was provided in the request
     let diaporamaUrl = null;
-    if (file) {
-      diaporamaUrl = await uploadPdfToStorage(file);
+    if (pdfFile) {
+      diaporamaUrl = await uploadFileToStorage(pdfFile);
+    }
+    let poster_url = null;
+    if (posterFile) {
+      poster_url = await uploadFileToStorage(posterFile);
     }
 
     // Step 2: Insert the movie record into the database, including the string URL to the file
@@ -70,7 +77,8 @@ const createMovie = async (req, res) => {
         genre,
         duration_minutes: duration_minutes ? parseInt(duration_minutes) : null,
         presenter,
-        diaporama_url: diaporamaUrl
+        diaporama_url: diaporamaUrl,
+        poster_url
       }])
       .select();
 
@@ -185,15 +193,29 @@ const updateMovie = async (req, res) => {
         return res.status(400).json({ error: 'Title is absolutely required.' });
     }
 
+    const pdfFile = req.files?.pdf ? req.files.pdf[0] : null;
+    const posterFile = req.files?.poster ? req.files.poster[0] : null;
+
     let diaporamaUrl = movie.diaporama_url;
-    if (req.file) {
+    if (pdfFile) {
       // upload new
-      diaporamaUrl = await uploadPdfToStorage(req.file);
+      diaporamaUrl = await uploadFileToStorage(pdfFile);
       // optionally delete old file from storage
       if (movie.diaporama_url) {
          const oldFileName = movie.diaporama_url.split('/').pop();
          if (oldFileName) {
             await supabase.storage.from('diaporamas').remove([oldFileName]);
+         }
+      }
+    }
+    
+    let poster_url = movie.poster_url;
+    if (posterFile) {
+      poster_url = await uploadFileToStorage(posterFile);
+      if (movie.poster_url) {
+         const oldPosterName = movie.poster_url.split('/').pop();
+         if (oldPosterName) {
+            await supabase.storage.from('diaporamas').remove([oldPosterName]);
          }
       }
     }
@@ -204,7 +226,8 @@ const updateMovie = async (req, res) => {
           title,
           genre,
           duration_minutes: duration_minutes ? parseInt(duration_minutes) : null,
-          diaporama_url: diaporamaUrl
+          diaporama_url: diaporamaUrl,
+          poster_url
        })
        .eq('id', id)
        .select();

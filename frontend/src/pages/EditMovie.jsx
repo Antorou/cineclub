@@ -17,14 +17,16 @@ const EditMovie = () => {
     duration_minutes: ''
   });
   const [file, setFile] = useState(null);
+  const [posterFile, setPosterFile] = useState(null);
 
   useEffect(() => {
     if (location.state && location.state.movie) {
-      const { title, genre, duration_minutes } = location.state.movie;
+      const { title, genre, duration_minutes, poster_url } = location.state.movie;
       setFormData({
         title: title || '',
         genre: genre || '',
-        duration_minutes: duration_minutes || ''
+        duration_minutes: duration_minutes || '',
+        poster_url: poster_url || ''
       });
     } else {
       navigate('/');
@@ -44,6 +46,9 @@ const EditMovie = () => {
     
     if (file) {
       data.append('pdf', file);
+    }
+    if (posterFile) {
+      data.append('poster', posterFile);
     }
 
     try {
@@ -89,6 +94,13 @@ const EditMovie = () => {
           <div style={{ flex: '1 1 200px' }}>
             <label>DURÉE (MIN)</label>
             <input type="number" name="duration_minutes" value={formData.duration_minutes} onChange={handleChange} placeholder="164" />
+          </div>
+        </div>
+
+        <div>
+          <label>REMPLACER L'AFFICHE (FACULTATIF)</label>
+          <div style={{ border: '2px dashed var(--color-ink-black)', padding: '20px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
+            <input type="file" accept="image/*" onChange={(e) => setPosterFile(e.target.files[0])} style={{ border: 'none', padding: 0 }} />
           </div>
         </div>
 

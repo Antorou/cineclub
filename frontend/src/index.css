@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
-  /* Colors - "Studio Ghibli" Palette */
-  --color-dusk-violet: #F5F7F0; /* Fond - Thé vert très clair */
-  --color-hi-vis-yellow: #FF6B6B; /* Accent - Corail vif */
-  --color-buttery-yellow: #2D3E40; /* Accent 2 - Vert sapin sombre */
-  --color-lilac-shadow: #E6EEDB; 
-  --color-bubblegum-pink: #E6EEDB; /* Carte 1 - Vert pâle */
-  --color-matcha-cream: #FDE4D8; /* Carte 2 - Pêche douce */
-  --color-magenta-punch: #D8EBF9; /* Carte 3 - Bleu ciel (Ponyo) */
-  --color-firecracker-red: #FFF5D1; /* Carte 4 - Jaune beurre (Totoro) */
-  --color-bone-white: #FFFFFF; /* Fond de cartes - Blanc nacré */
-  --color-ink-black: #2D3E40; /* Texte principal - Vert sapin / Gris très sombre */
+  /* Colors - "Nouvelle Vague" Palette */
+  --color-dusk-violet: #F4F4F9; /* Fond - Lait / Gris très clair */
+  --color-hi-vis-yellow: #D90429; /* Accent - Rouge Cinémathèque (Carmin) */
+  --color-buttery-yellow: #2B2D42; /* Accent 2 - Noir Asphalte */
+  --color-lilac-shadow: #EDF2F4; 
+  --color-bubblegum-pink: #EDF2F4; /* Carte 1 - Gris Neige */
+  --color-matcha-cream: #E2EAFC; /* Carte 2 - Bleu-Gris Pâle */
+  --color-magenta-punch: #FFE5D9; /* Carte 3 - Blanc Rosé Pâle */
+  --color-firecracker-red: #D8E2DC; /* Carte 4 - Kaki Pâle */
+  --color-bone-white: #FFFFFF; /* Fond des cartes/formulaires - Blanc Pur */
+  --color-ink-black: #0B090A; /* Texte principal - Noir Vrai */
   --color-pure-black: #000000;
 
   /* Typography — Font Families */

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
-import { UploadCloud } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { UploadCloud, ChevronLeft } from 'lucide-react';
 
 const Upload = () => {
   const { activeUser, token } = useContext(UserContext);
@@ -11,7 +11,7 @@ const Upload = () => {
   const [formData, setFormData] = useState({
     title: '',
     genre: '',
-    duration_minutes: ''
+    date: ''
   });
   const [file, setFile] = useState(null);
   const [posterFile, setPosterFile] = useState(null);
@@ -25,8 +25,7 @@ const Upload = () => {
     const data = new FormData();
     data.append('title', formData.title);
     data.append('genre', formData.genre);
-    data.append('duration_minutes', formData.duration_minutes);
-    data.append('duration_minutes', formData.duration_minutes);
+    data.append('date', formData.date);
     data.append('presenter', activeUser); 
     
     if (file) {
@@ -60,9 +59,13 @@ const Upload = () => {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '40px auto', padding: '0 20px' }}>
+    <div style={{ maxWidth: '600px', margin: '40px auto', padding: '0 20px', position: 'relative' }}>
+      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--color-ink-black)', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>
+        <ChevronLeft size={20} /> RETOUR
+      </Link>
+      
       <h2 className="hero-display" style={{ fontSize: '60px', marginBottom: '20px', textAlign: 'center', color: 'var(--color-hi-vis-yellow)' }}>
-        NOUVELLE PRÉSENTATION
+        AJOUTER
       </h2>
       
       <form onSubmit={handleSubmit} className="dark-text-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '40px' }}>
@@ -77,8 +80,8 @@ const Upload = () => {
             <input type="text" name="genre" value={formData.genre} onChange={handleChange} placeholder="Sci-Fi" />
           </div>
           <div style={{ flex: '1 1 200px' }}>
-            <label>DURÉE (MIN)</label>
-            <input type="number" name="duration_minutes" value={formData.duration_minutes} onChange={handleChange} placeholder="164" />
+            <label>DATE DE PROJECTION</label>
+            <input type="date" name="date" value={formData.date} onChange={handleChange} />
           </div>
         </div>
 
@@ -98,7 +101,7 @@ const Upload = () => {
           </div>
         </div>
 
-        <button type="submit" className="gate-pill-btn" disabled={loading} style={{ marginTop: '20px', background: 'var(--color-dusk-violet)', color: 'var(--color-bone-white)', width: '100%' }}>
+        <button type="submit" className="gate-pill-btn" disabled={loading} style={{ marginTop: '20px', background: 'var(--color-ink-black)', color: 'var(--color-bone-white)', width: '100%' }}>
           {loading ? 'TÉLÉCHARGEMENT...' : `SOUMETTRE EN TANT QUE ${activeUser.toUpperCase()}`}
         </button>
       </form>

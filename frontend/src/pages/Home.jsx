@@ -119,11 +119,32 @@ const Home = () => {
 
         {/* Cartoon Mascot Placeholder */}
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-30%, -60%)', zIndex: 1 }}>
-           <svg width="250" height="250" viewBox="0 0 100 100" fill="var(--color-bone-white)" stroke="var(--color-pure-black)" strokeWidth="3">
-              <path d="M 20 50 Q 50 10, 80 50 Q 100 80, 50 90 Q 0 80, 20 50 Z" fill="var(--color-bone-white)" />
-              <circle cx="40" cy="45" r="5" fill="var(--color-pure-black)" />
-              <circle cx="65" cy="45" r="5" fill="var(--color-pure-black)" />
-              <path d="M 45 65 Q 50 75 60 65" fill="transparent" stroke="var(--color-pure-black)" strokeWidth="3" strokeLinecap="round" />
+           <svg width="250" height="250" viewBox="0 0 100 100" fill="var(--color-bone-white)" stroke="var(--color-ink-black)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {/* Rabbit 1 (Left) */}
+              <ellipse cx="28" cy="35" rx="4.5" ry="16" transform="rotate(-15 28 35)" />
+              <ellipse cx="42" cy="35" rx="4.5" ry="16" transform="rotate(10 42 35)" />
+              <ellipse cx="35" cy="75" rx="18" ry="22" />
+              <circle cx="35" cy="55" r="14" />
+              <circle cx="29" cy="53" r="1.5" fill="var(--color-ink-black)" stroke="none" />
+              <circle cx="41" cy="53" r="1.5" fill="var(--color-ink-black)" stroke="none" />
+              <path d="M 33 58 Q 35 60 37 58" fill="none" />
+              <path d="M 35 56 V 58" fill="none" />
+              <line x1="14" y1="52" x2="20" y2="54" strokeWidth="1" />
+              <line x1="13" y1="56" x2="20" y2="56" strokeWidth="1" />
+              <line x1="50" y1="54" x2="56" y2="52" strokeWidth="1" />
+              <line x1="50" y1="56" x2="57" y2="56" strokeWidth="1" />
+              
+              {/* Rabbit 2 (Right, leaning slightly) */}
+              <ellipse cx="58" cy="45" rx="3.5" ry="13" transform="rotate(-20 58 45)" />
+              <ellipse cx="70" cy="42" rx="3.5" ry="13" transform="rotate(25 70 42)" />
+              <ellipse cx="65" cy="80" rx="14" ry="18" />
+              <circle cx="65" cy="62" r="11" />
+              <circle cx="60" cy="60" r="1.3" fill="var(--color-ink-black)" stroke="none" />
+              <circle cx="70" cy="60" r="1.3" fill="var(--color-ink-black)" stroke="none" />
+              <path d="M 63 64 Q 65 66 67 64" fill="none" />
+              <path d="M 65 63 V 64" fill="none" />
+              <line x1="49" y1="59" x2="54" y2="60" strokeWidth="1" />
+              <line x1="76" y1="60" x2="81" y2="59" strokeWidth="1" />
            </svg>
         </div>
 
@@ -154,9 +175,8 @@ const Home = () => {
           movies.map((movie, index) => {
             // Pick a confetti color based on the index
             const surfaceColor = CONFETTI_COLORS[index % CONFETTI_COLORS.length];
-            // If the surface is darker (magenta, red), use white text. Otherwise black.
-            const bgIsDark = surfaceColor.includes('magenta') || surfaceColor.includes('firecracker');
-            const textColor = bgIsDark ? 'var(--color-bone-white)' : 'var(--color-ink-black)';
+            // All cards are now dark, so we force light text.
+            const textColor = 'var(--color-ink-black)';
 
             return (
               <div key={movie.id} className="confetti-card" style={{ backgroundColor: surfaceColor, color: textColor }}>
@@ -170,6 +190,7 @@ const Home = () => {
 
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '40px', flexWrap: 'wrap' }}>
                   <span className="mono-label" style={{ borderColor: textColor }}>{movie.genre || 'AUCUN'}</span>
+                  {movie.date && <span className="mono-label" style={{ borderColor: textColor, backgroundColor: 'rgba(0,0,0,0.05)' }}>{new Date(movie.date).toLocaleDateString()}</span>}
                   <span className="mono-label" style={{ backgroundColor: 'transparent', border: '1px solid transparent' }}>PAR <strong style={{ fontFamily: 'var(--font-degulardisplay-bold)' }}>{movie.presenter}</strong></span>
                 </div>
 

@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
-  /* Colors */
-  --color-dusk-violet: #8584bd;
-  --color-hi-vis-yellow: #f4ed36;
-  --color-buttery-yellow: #f9cc73;
-  --color-lilac-shadow: #61609a;
-  --color-bubblegum-pink: #f8c1ba;
-  --color-matcha-cream: #b5c995;
-  --color-magenta-punch: #ac4f98;
-  --color-firecracker-red: #c94245;
-  --color-bone-white: #f9f5f2;
-  --color-ink-black: #1a1a1a;
+  /* Colors - "Studio Ghibli" Palette */
+  --color-dusk-violet: #F5F7F0; /* Fond - Thé vert très clair */
+  --color-hi-vis-yellow: #FF6B6B; /* Accent - Corail vif */
+  --color-buttery-yellow: #2D3E40; /* Accent 2 - Vert sapin sombre */
+  --color-lilac-shadow: #E6EEDB; 
+  --color-bubblegum-pink: #E6EEDB; /* Carte 1 - Vert pâle */
+  --color-matcha-cream: #FDE4D8; /* Carte 2 - Pêche douce */
+  --color-magenta-punch: #D8EBF9; /* Carte 3 - Bleu ciel (Ponyo) */
+  --color-firecracker-red: #FFF5D1; /* Carte 4 - Jaune beurre (Totoro) */
+  --color-bone-white: #FFFFFF; /* Fond de cartes - Blanc nacré */
+  --color-ink-black: #2D3E40; /* Texte principal - Vert sapin / Gris très sombre */
   --color-pure-black: #000000;
 
   /* Typography — Font Families */

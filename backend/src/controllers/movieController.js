@@ -49,7 +49,7 @@ const getAllMovies = async (req, res) => {
 
 const createMovie = async (req, res) => {
   try {
-    const { title, genre, duration_minutes, presenter } = req.body;
+    const { title, genre, date, presenter } = req.body;
     
     // Check if files array is present (now an object mapping due to upload.fields)
     const pdfFile = req.files?.pdf ? req.files.pdf[0] : null;
@@ -75,7 +75,7 @@ const createMovie = async (req, res) => {
       .insert([{
         title,
         genre,
-        duration_minutes: duration_minutes ? parseInt(duration_minutes) : null,
+        date: date || null,
         presenter,
         diaporama_url: diaporamaUrl,
         poster_url
@@ -175,7 +175,7 @@ const deleteMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, genre, duration_minutes } = req.body;
+    const { title, genre, date } = req.body;
     const username = req.user.username;
     
     const { data: movie, error: fetchError } = await supabase
@@ -225,7 +225,7 @@ const updateMovie = async (req, res) => {
        .update({
           title,
           genre,
-          duration_minutes: duration_minutes ? parseInt(duration_minutes) : null,
+          date: date || null,
           diaporama_url: diaporamaUrl,
           poster_url
        })

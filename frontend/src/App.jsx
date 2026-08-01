@@ -4,6 +4,7 @@ import { UserProvider, UserContext } from './context/UserContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Upload from './pages/Upload';
+import EditMovie from './pages/EditMovie';
 import Login from './pages/Login';
 
 // ✨ TEACHER CONCEPT: The "Protected Route" component. 
@@ -30,6 +31,7 @@ const AppRoutes = () => {
           {/* Protected Routes (You can only see these if ProtectedRoute approves!) */}
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+          <Route path="/edit/:id" element={<ProtectedRoute><EditMovie /></ProtectedRoute>} />
         </Routes>
       </div>
     </Router>

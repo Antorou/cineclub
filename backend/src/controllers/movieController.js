@@ -123,8 +123,104 @@ const updateReview = async (req, res) => {
   }
 };
 
+const deleteMovie = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const username = req.user.username; 
+
+    // Find the movie first to check presenter and get diaporama_url
+    const { data: movie, error: fetchError } = await supabase
+      .from('movies')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !movie) return res.status(404).json({ error: 'Movie not found' });
+    
+    // Authorization check
+    if (movie.presenter !== username && username !== 'Admin') { 
+        return res.status(403).json({ error: 'Unauthorized to delete this movie' });
+    }
+
+    // Optionally delete from storage Bucket
+    if (movie.diaporama_url) {
+      const fileName = movie.diaporama_url.split('/').pop();
+      if (fileName) {
+         await supabase.storage.from('diaporamas').remove([fileName]);
+      }
+    }
+
+    const { error: deleteError } = await supabase
+      .from('movies')
+      .delete()
+      .eq('id', id);
+
+    if (deleteError) throw deleteError;
+
+    res.json({ message: 'Movie deleted successfully' });
+  } catch (error) {
+    console.error('Error in deleteMovie:', error);
+    res.status(500).json({ error: 'Failed to delete movie.' });
+  }
+};
+
+const updateMovie = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, genre, duration_minutes } = req.body;
+    const username = req.user.username;
+    
+    const { data: movie, error: fetchError } = await supabase
+      .from('movies')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !movie) return res.status(404).json({ error: 'Movie not found' });
+    if (movie.presenter !== username && username !== 'Admin') {
+        return res.status(403).json({ error: 'Unauthorized to edit this movie' });
+    }
+
+    if (!title) {
+        return res.status(400).json({ error: 'Title is absolutely required.' });
+    }
+
+    let diaporamaUrl = movie.diaporama_url;
+    if (req.file) {
+      // upload new
+      diaporamaUrl = await uploadPdfToStorage(req.file);
+      // optionally delete old file from storage
+      if (movie.diaporama_url) {
+         const oldFileName = movie.diaporama_url.split('/').pop();
+         if (oldFileName) {
+            await supabase.storage.from('diaporamas').remove([oldFileName]);
+         }
+      }
+    }
+
+    const { data, error } = await supabase
+       .from('movies')
+       .update({
+          title,
+          genre,
+          duration_minutes: duration_minutes ? parseInt(duration_minutes) : null,
+          diaporama_url: diaporamaUrl
+       })
+       .eq('id', id)
+       .select();
+
+    if (error) throw error;
+    res.json(data[0]);
+  } catch (error) {
+    console.error('Error in updateMovie:', error);
+    res.status(500).json({ error: 'Failed to update movie.' });
+  }
+};
+
 module.exports = {
   getAllMovies,
   createMovie,
-  updateReview
+  updateReview,
+  deleteMovie,
+  updateMovie
 };

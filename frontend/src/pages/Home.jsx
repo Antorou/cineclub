@@ -1,16 +1,79 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
-import { PlusCircle, PlayCircle } from 'lucide-react';
+import { PlusCircle, PlayCircle, Maximize, ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Scorecard from '../components/Scorecard';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const Home = () => {
   const { activeUser, token, logout } = useContext(UserContext);
   
-  // React State: We hold our movies array locally once loaded from the server
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPdfUrl, setSelectedPdfUrl] = useState(null);
+  const [selectedPdfTitle, setSelectedPdfTitle] = useState("");
+  const viewerRef = useRef(null);
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pdfError, setPdfError] = useState(null);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to permanently delete this movie?")) return;
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
+      const response = await fetch(`${API_URL}/api/movies/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        setMovies(prev => prev.filter(m => m.id !== id));
+      } else {
+        alert("Failed to delete the movie. You might not have permission.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting movie. Please check your connection.");
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      viewerRef.current?.requestFullscreen().catch(err => console.error(err));
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedPdfUrl(null);
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      }
+      if (e.key === 'f' || e.key === 'F') {
+        if (selectedPdfUrl) {
+           toggleFullscreen();
+        }
+      }
+      if (e.key === 'ArrowRight') {
+         setPageNumber(prev => Math.min(prev + 1, numPages || 1));
+      }
+      if (e.key === 'ArrowLeft') {
+         setPageNumber(prev => Math.max(prev - 1, 1));
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedPdfUrl, numPages]);
 
   // React useEffect: Used for fetching data the instant the component loads onto the screen!
   useEffect(() => {
@@ -87,16 +150,44 @@ const Home = () => {
                        : 'No Rating'} 
                  </span>
                  
-                 {/* Opens the PDF inside our automated modal viewer! */}
-                 {movie.diaporama_url && (
-                   <button 
-                     onClick={() => setSelectedPdfUrl(movie.diaporama_url)}
-                     className="btn-switch" 
-                     style={{ width: 'auto', padding: '8px 16px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '6px' }}
-                   >
-                     View <PlayCircle size={16} />
-                   </button>
-                 )}
+                 <div style={{ display: 'flex', gap: '8px' }}>
+                   {activeUser === movie.presenter && (
+                     <>
+                       <Link 
+                         to={`/edit/${movie.id}`} 
+                         state={{ movie }}
+                         className="btn-switch"
+                         style={{ width: 'auto', padding: '8px 12px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.2)', color: '#93c5fd' }}
+                         title="Edit Presentation"
+                       >
+                         <Pencil size={16} />
+                       </Link>
+                       <button 
+                         onClick={() => handleDelete(movie.id)}
+                         className="btn-switch" 
+                         style={{ width: 'auto', padding: '8px 12px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5' }}
+                         title="Delete Presentation"
+                       >
+                         <Trash2 size={16} />
+                       </button>
+                     </>
+                   )}
+                   {/* Opens the PDF inside our automated modal viewer! */}
+                   {movie.diaporama_url && (
+                     <button 
+                       onClick={() => {
+                          setSelectedPdfUrl(movie.diaporama_url);
+                          setSelectedPdfTitle(movie.title);
+                          setPageNumber(1);
+                          setPdfError(null);
+                       }}
+                       className="btn-switch" 
+                       style={{ width: 'auto', padding: '8px 16px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                     >
+                       View <PlayCircle size={16} />
+                     </button>
+                   )}
+                 </div>
               </div>
               
               <Scorecard movie={movie} token={token} activeUser={activeUser} />
@@ -109,29 +200,80 @@ const Home = () => {
 
       {/* PDF Modal Viewer */}
       {selectedPdfUrl && (
-        <div style={{
+        <div ref={viewerRef} style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
-          backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1000,
+          backgroundColor: 'rgba(0,0,0,0.95)', zIndex: 1000,
           display: 'flex', flexDirection: 'column', padding: '2rem',
           backdropFilter: 'blur(8px)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', alignItems: 'center' }}>
-            <h3 style={{ color: 'white', fontSize: '1.5rem', fontFamily: 'Outfit' }}>Presentation Viewer</h3>
-            <button 
-              onClick={() => setSelectedPdfUrl(null)}
-              className="btn-primary"
-              style={{ background: 'rgba(239, 68, 68, 0.8)', padding: '8px 20px' }}
-            >
-              Close Viewer
-            </button>
+            <h3 style={{ color: 'white', fontSize: '1.5rem', fontFamily: 'Outfit' }}>{selectedPdfTitle}</h3>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button 
+                onClick={toggleFullscreen}
+                className="btn-primary"
+                style={{ background: 'rgba(59, 130, 246, 0.8)', padding: '8px 20px', display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <Maximize size={18} /> Fullscreen (F)
+              </button>
+              <button 
+                onClick={() => {
+                  setSelectedPdfUrl(null);
+                  if (document.fullscreenElement) document.exitFullscreen();
+                }}
+                className="btn-primary"
+                style={{ background: 'rgba(239, 68, 68, 0.8)', padding: '8px 20px' }}
+              >
+                Close Viewer (ESC)
+              </button>
+            </div>
           </div>
-          <iframe 
-            src={selectedPdfUrl} 
-            width="100%" 
-            height="100%" 
-            style={{ border: 'none', borderRadius: '12px', backgroundColor: 'white', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} 
-            title="PDF Presentation"
-          />
+          <div style={{ 
+            flex: 1, 
+            overflow: 'auto', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            backgroundColor: 'rgba(255,255,255,0.02)',
+            borderRadius: '12px',
+            position: 'relative'
+          }}>
+            {pdfError && <div style={{ color: 'red', textAlign: 'center' }}><h3>Failed to load PDF</h3><p>{pdfError}</p></div>}
+            {!pdfError && (
+              <Document 
+                file={selectedPdfUrl} 
+                onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                onLoadError={(error) => setPdfError(error.message)}
+                loading={<div style={{ color: 'white' }}>Loading Presentation...</div>}
+              >
+                <Page 
+                  pageNumber={pageNumber} 
+                  renderTextLayer={true}
+                  renderAnnotationLayer={true}
+                  className="pdf-page"
+                />
+              </Document>
+            )}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '1rem', color: 'white' }}>
+             <button 
+               onClick={() => setPageNumber(p => Math.max(p - 1, 1))} 
+               disabled={pageNumber <= 1} 
+               className="btn-primary" 
+               style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', opacity: pageNumber <= 1 ? 0.5 : 1 }}
+             >
+               <ChevronLeft size={18} /> Prev
+             </button>
+             <span style={{ fontFamily: 'Outfit', fontSize: '1.1rem' }}>Page {pageNumber} of {numPages || '?'}</span>
+             <button 
+               onClick={() => setPageNumber(p => Math.min(p + 1, numPages || 1))} 
+               disabled={pageNumber >= (numPages || 1)} 
+               className="btn-primary" 
+               style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', opacity: pageNumber >= (numPages || 1) ? 0.5 : 1 }}
+             >
+               Next <ChevronRight size={18} />
+             </button>
+          </div>
         </div>
       )}
     </div>

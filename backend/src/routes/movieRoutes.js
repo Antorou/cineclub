@@ -13,4 +13,10 @@ router.post('/', protect, upload.single('pdf'), movieController.createMovie);
 // Update dual scorecard ratings/reviews securely based on JWT (PUT /api/movies/:id/review)
 router.put('/:id/review', protect, movieController.updateReview);
 
+// Delete a movie (DELETE /api/movies/:id)
+router.delete('/:id', protect, movieController.deleteMovie);
+
+// Update a movie (PUT /api/movies/:id)
+router.put('/:id', protect, upload.single('pdf'), movieController.updateMovie);
+
 module.exports = router;

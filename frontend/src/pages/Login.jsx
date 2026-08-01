@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { Lock } from 'lucide-react';
 
 const Login = () => {
   const { login } = useContext(UserContext);
@@ -10,47 +9,54 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // Await the genuine API network request!
     const success = await login(username, password);
     if (!success) {
-      setError('Incorrect database password! Try again.');
+      setError('MOT DE PASSE INCORRECT ! RÉESSAYEZ.');
     }
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <form onSubmit={handleLogin} className="glass-panel animate-fade-in" style={{ padding: '3rem', width: '100%', maxWidth: '420px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <form onSubmit={handleLogin} className="dark-text-card" style={{ width: '100%', maxWidth: '420px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-          <div style={{ background: 'var(--accent-color)', padding: '15px', borderRadius: '50%', boxShadow: '0 0 30px var(--accent-glow)' }}>
-            <Lock size={32} color="white" />
-          </div>
+        <h2 className="hero-display" style={{ fontSize: '60px', margin: 0, textAlign: 'center', color: 'var(--color-ink-black)' }}>ACCÈS PRIVÉ</h2>
+        
+        {error && <div className="mono-text" style={{ color: 'var(--color-firecracker-red)', textAlign: 'center' }}>{error}</div>}
+
+        <div>
+          <label>CHOISIR UN PROFIL</label>
+          <select 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)}
+            style={{ 
+              width: '100%', padding: '12px', borderRadius: 'var(--radius-cards)', 
+              border: '1px solid var(--color-ink-black)', background: 'transparent', 
+              color: 'var(--color-ink-black)', fontFamily: 'var(--font-degularvariable)',
+              fontSize: '16px'
+            }}
+          >
+            <option value="Antoine">Antoine</option>
+            <option value="Léa">Léa</option>
+          </select>
         </div>
-        
-        <h2 className="text-gradient" style={{ fontSize: '2rem' }}>Private Access</h2>
-        <p style={{ color: 'var(--text-muted)' }}>Select your profile to continue.</p>
 
-        {error && <div style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.3)' }}>{error}</div>}
+        <div>
+          <label>MOT DE PASSE</label>
+          <input 
+            type="password" 
+            placeholder="Entrez votre mot de passe" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        <select 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.5)', color: 'white', fontSize: '1.1rem' }}
-        >
-          <option value="Antoine">Antoine</option>
-          <option value="Léa">Léa</option>
-        </select>
-
-        <input 
-          type="password" 
-          placeholder="Enter your password" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: '1.1rem' }}
-        />
-
-        <button type="submit" className="btn-primary" style={{ padding: '14px', fontSize: '1.1rem', marginTop: '1rem' }}>
-          Unlock Cinéclub
+        <button type="submit" className="gate-pill-btn" style={{ 
+          marginTop: '20px', 
+          width: '100%', 
+          background: 'var(--color-dusk-violet)', 
+          color: 'var(--color-bone-white)' 
+        }}>
+          S'IDENTIFIER
         </button>
       </form>
     </div>

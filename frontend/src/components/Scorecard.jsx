@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Star } from 'lucide-react';
 
-// Teacher Concept: We compartmentalize logic into small reusable Components!
 const Scorecard = ({ movie, token, activeUser }) => {
-  // Dynamically check if the current user already has a score submitted
   const existingScore = activeUser === 'Antoine' ? movie.antoine_score : movie.lea_score;
   const existingReview = activeUser === 'Antoine' ? movie.antoine_review : movie.lea_review;
-  
-  // Dynamically extract the partner's scorecard data!
+
   const partnerName = activeUser === 'Antoine' ? 'Léa' : 'Antoine';
   const partnerScore = activeUser === 'Antoine' ? movie.lea_score : movie.antoine_score;
   const partnerReview = activeUser === 'Antoine' ? movie.lea_review : movie.antoine_review;
@@ -20,11 +17,9 @@ const Scorecard = ({ movie, token, activeUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
-      
-      // Hit our newly created PUT route perfectly!
       const response = await fetch(`${API_URL}/api/movies/${movie.id}/review`, {
         method: 'PUT',
         headers: {
@@ -35,89 +30,101 @@ const Scorecard = ({ movie, token, activeUser }) => {
       });
 
       if (!response.ok) throw new Error('Failed to update scorecard');
-      
+
       setIsEditing(false);
-      // For simplicity in this milestone, we just forcefully refresh the page to pull down the newly updated global array.
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       console.error(error);
-      alert('Could not update scorecard! Is the backend running?');
+      alert('Erreur lors de la mise à jour de la note ! Le backend est-il en cours d\'exécution ?');
     } finally {
       setLoading(false);
     }
   };
 
-  // Render the viewing state
   if (!isEditing) {
     return (
-      <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <h4 style={{ fontSize: '0.9rem', color: 'var(--accent-color)' }}>Your Feedback</h4>
-          <button onClick={() => setIsEditing(true)} className="btn-switch" style={{ width: 'auto', padding: '4px 12px', fontSize: '0.8rem', borderRadius: '4px' }}>
-            {existingScore !== null && existingScore !== undefined ? 'Edit' : 'Add Review'}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <h4 className="mono-text" style={{ fontSize: '14px', margin: 0 }}>VOTRE AVIS</h4>
+          <button onClick={() => setIsEditing(true)} style={{ background: 'transparent', border: '1px solid currentColor', borderRadius: '100px', cursor: 'pointer', padding: '4px 10px', fontSize: '10px', fontFamily: 'var(--font-bergenmonoregular)', color: 'inherit' }}>
+            {existingScore !== null && existingScore !== undefined ? 'MODIFIER' : 'AJOUTER UN AVIS'}
           </button>
         </div>
-        
+
         {existingScore !== null && existingScore !== undefined ? (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-              <Star size={14} color="#ffb703" fill="#ffb703" />
-              <strong>{existingScore}/10</strong>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+              <Star size={14} color="currentColor" fill="currentColor" />
+              <strong style={{ fontFamily: 'var(--font-degulardisplay-bold)' }}>{existingScore}/10</strong>
             </div>
-            {existingReview && <p style={{ fontSize: '0.85rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>"{existingReview}"</p>}
+            {existingReview && <p style={{ fontSize: '14px', fontStyle: 'italic', opacity: 0.9 }}>"{existingReview}"</p>}
           </div>
         ) : (
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>No review posted yet.</p>
+          <p className="mono-text" style={{ fontSize: '12px', opacity: 0.7 }}>AUCUN AVIS PUBLIÉ POUR LE MOMENT.</p>
         )}
 
-        {/* Partner's Feedback Block - Read Only */}
-        <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px dashed rgba(255,255,255,0.1)' }}>
-          <h4 style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>{partnerName}'s Feedback</h4>
+        {/* Partner's Feedback Block */}
+        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px dashed currentColor' }}>
+          <h4 className="mono-text" style={{ fontSize: '14px', marginBottom: '10px' }}>AVIS DE {partnerName.toUpperCase()}</h4>
           {partnerScore !== null && partnerScore !== undefined ? (
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                <Star size={14} color="#ffb703" fill="#ffb703" />
-                <strong>{partnerScore}/10</strong>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+                <Star size={14} color="currentColor" fill="currentColor" />
+                <strong style={{ fontFamily: 'var(--font-degulardisplay-bold)' }}>{partnerScore}/10</strong>
               </div>
-              {partnerReview && <p style={{ fontSize: '0.85rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>"{partnerReview}"</p>}
+              {partnerReview && <p style={{ fontSize: '14px', fontStyle: 'italic', opacity: 0.9 }}>"{partnerReview}"</p>}
             </div>
           ) : (
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>No review posted yet.</p>
+            <p className="mono-text" style={{ fontSize: '12px', opacity: 0.7 }}>AUCUN AVIS PUBLIÉ POUR LE MOMENT.</p>
           )}
         </div>
       </div>
     );
   }
 
-  // Render the interactive Form state
+  // Edit State
   return (
-    <form onSubmit={handleSubmit} style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      <h4 style={{ fontSize: '0.9rem', color: 'var(--accent-color)' }}>Update Your Score</h4>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <input 
-          type="range" 
-          min="0" max="10" 
-          value={score} 
-          onChange={(e) => setScore(e.target.value)} 
-          style={{ flex: 1 }}
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <h4 className="mono-text" style={{ fontSize: '14px' }}>METTRE À JOUR LA NOTE</h4>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '17px' }}>
+        <input
+          type="range"
+          min="0" max="10"
+          value={score}
+          onChange={(e) => setScore(e.target.value)}
+          style={{ flex: 1, accentColor: 'currentColor' }}
         />
-        <span style={{ fontWeight: 'bold' }}>{score}/10</span>
+        <span style={{ fontWeight: 'bold', fontFamily: 'var(--font-degulardisplay-bold)' }}>{score}/10</span>
       </div>
 
-      <textarea 
+      <textarea
         value={review}
         onChange={(e) => setReview(e.target.value)}
-        placeholder="Write your thoughts..."
-        style={{ width: '100%', padding: '8px', borderRadius: '4px', background: 'rgba(0,0,0,0.2)', color: 'white', border: '1px solid var(--glass-border)', minHeight: '60px', marginTop: '0.2rem' }}
+        placeholder="T'en as pensé quoi ?"
+        style={{
+          width: '100%', padding: '12px', borderRadius: '6px',
+          background: 'transparent', color: 'inherit',
+          border: '1px solid currentColor', minHeight: '60px',
+          fontFamily: 'var(--font-degularvariable)',
+          marginTop: '10px'
+        }}
       />
-      
-      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
-        <button type="submit" className="btn-primary" disabled={loading} style={{ padding: '6px 12px', fontSize: '0.85rem', flex: 1 }}>
-          {loading ? 'Saving...' : 'Save'}
+
+      <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+        <button type="submit" disabled={loading} style={{
+          background: 'currentColor', color: 'var(--color-bone-white)',
+          padding: '8px 16px', borderRadius: '100px', fontSize: '12px',
+          fontFamily: 'var(--font-degulardisplay-bold)', flex: 1, border: 'none', cursor: 'pointer'
+        }}>
+          {loading ? 'SAUVEGARDE...' : 'ENREGISTRER'}
         </button>
-        <button type="button" onClick={() => setIsEditing(false)} style={{ background: 'transparent', border: '1px solid var(--glass-border)', color: 'white', padding: '6px 12px', borderRadius: '999px', fontSize: '0.85rem', cursor: 'pointer' }}>
-          Cancel
+        <button type="button" onClick={() => setIsEditing(false)} style={{
+          background: 'transparent', border: '1px solid currentColor',
+          color: 'inherit', padding: '8px 16px', borderRadius: '100px',
+          fontSize: '12px', fontFamily: 'var(--font-degulardisplay-bold)', cursor: 'pointer'
+        }}>
+          ANNULER
         </button>
       </div>
     </form>

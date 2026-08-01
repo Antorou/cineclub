@@ -1,96 +1,165 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: rgba(25, 25, 35, 0.6);
-  --accent-color: #8b5cf6;
-  --accent-glow: rgba(139, 92, 246, 0.4);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(20, 20, 30, 0.4);
+  /* Colors - "Nouvelle Vague" Palette */
+  --color-dusk-violet: #F4F4F9; /* Fond - Lait / Gris très clair */
+  --color-hi-vis-yellow: #D90429; /* Accent - Rouge Cinémathèque (Carmin) */
+  --color-buttery-yellow: #2B2D42; /* Accent 2 - Noir Asphalte */
+  --color-lilac-shadow: #EDF2F4; 
+  --color-bubblegum-pink: #EDF2F4; /* Carte 1 - Gris Neige */
+  --color-matcha-cream: #E2EAFC; /* Carte 2 - Bleu-Gris Pâle */
+  --color-magenta-punch: #FFE5D9; /* Carte 3 - Blanc Rosé Pâle */
+  --color-firecracker-red: #D8E2DC; /* Carte 4 - Kaki Pâle */
+  --color-bone-white: #FFFFFF; /* Fond des cartes/formulaires - Blanc Pur */
+  --color-ink-black: #0B090A; /* Texte principal - Noir Vrai */
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-obviouslyvariable: 'Anton', ui-sans-serif, system-ui, sans-serif;
+  --font-degularvariable: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-bergenmonoregular: 'JetBrains Mono', ui-monospace, monospace;
+  --font-degulardisplay-bold: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Base scales */
+  --spacing-unit: 4px;
+  --radius-tags: 100px;
+  --radius-cards: 6px;
+  --radius-buttons: 100px;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-feature-settings: "calt" 0;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-primary);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.12), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12), transparent 25%);
-  color: var(--text-main);
+  font-family: var(--font-degularvariable);
+  background-color: var(--color-dusk-violet);
+  color: var(--color-ink-black);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -0.02em;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Premium Glassmorphism UI */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* Beautiful Typography Enhancements */
-.text-gradient {
-  background: linear-gradient(135deg, #a78bfa, #38bdf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* Base App Layout */
 .app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  padding-bottom: 4rem;
+  width: 100%;
+  padding-bottom: 40px;
 }
 
-/* Interactive Reusable Button */
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-color), #6d28d9);
-  color: white;
+/* Typography Utility Classes */
+h1, .hero-display {
+  font-family: var(--font-obviouslyvariable);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mono-text {
+  font-family: var(--font-bergenmonoregular);
+  line-height: 0.8;
+}
+
+/* UI Elements */
+a {
+  text-decoration: none;
+}
+
+/* Gate Pill Button */
+.gate-pill-btn {
+  background-color: var(--color-bone-white);
+  color: var(--color-pure-black);
+  border-radius: var(--radius-buttons);
+  padding: 17px 24px;
+  font-family: var(--font-degulardisplay-bold);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.05em;
   border: none;
-  padding: 10px 24px;
-  border-radius: 999px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px var(--accent-glow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+.gate-pill-btn:hover { transform: translateY(-2px); }
+.gate-pill-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Outlined Display Button */
+.display-outline-btn {
+  background-color: transparent;
+  color: var(--color-hi-vis-yellow);
+  border: 3px solid var(--color-hi-vis-yellow);
+  border-radius: var(--radius-buttons);
+  padding: 14px 24px;
+  font-family: var(--font-degulardisplay-bold);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.display-outline-btn:hover { background-color: rgba(244, 237, 54, 0.1); }
+
+/* Underlined Text Link */
+.underline-link {
+  color: var(--color-bone-white);
+  font-family: var(--font-bergenmonoregular);
+  font-size: 12px;
+  line-height: 0.8;
+  letter-spacing: 0.05em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px var(--accent-glow);
-  filter: brightness(1.1);
+/* Cards */
+.confetti-card {
+  border-radius: var(--radius-cards);
+  padding: 17px;
+  background-color: var(--color-bone-white);
+  border: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Subtle Micro-animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.dark-text-card {
+  border-radius: var(--radius-cards);
+  padding: 17px;
+  background-color: var(--color-bone-white);
+  color: var(--color-ink-black);
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+/* Form Elements inside dark-text-card */
+.dark-text-card input {
+  font-family: var(--font-degularvariable);
+  padding: 12px;
+  border-radius: var(--radius-cards);
+  border: 1px solid var(--color-ink-black);
+  background: transparent;
+  color: var(--color-ink-black);
+  width: 100%;
+}
+.dark-text-card label {
+  font-weight: bold;
+  font-family: var(--font-degulardisplay-bold);
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Mono Label Tag */
+.mono-label {
+  font-family: var(--font-bergenmonoregular);
+  font-size: 12px;
+  line-height: 0.8;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: var(--radius-tags);
+  border: 1px solid currentColor;
+  display: inline-block;
+  text-transform: uppercase;
 }

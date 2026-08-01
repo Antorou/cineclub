@@ -8,7 +8,7 @@ const { protect } = require('../middleware/authMiddleware');
 router.get('/', protect, movieController.getAllMovies);
 
 // Create a new movie with a file upload (POST /api/movies) -> Now heavily protected!
-router.post('/', protect, upload.single('pdf'), movieController.createMovie);
+router.post('/', protect, upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), movieController.createMovie);
 
 // Update dual scorecard ratings/reviews securely based on JWT (PUT /api/movies/:id/review)
 router.put('/:id/review', protect, movieController.updateReview);
@@ -17,6 +17,6 @@ router.put('/:id/review', protect, movieController.updateReview);
 router.delete('/:id', protect, movieController.deleteMovie);
 
 // Update a movie (PUT /api/movies/:id)
-router.put('/:id', protect, upload.single('pdf'), movieController.updateMovie);
+router.put('/:id', protect, upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), movieController.updateMovie);
 
 module.exports = router;

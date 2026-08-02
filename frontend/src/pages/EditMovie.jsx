@@ -76,11 +76,11 @@ const EditMovie = () => {
 
   return (
     <div style={{ maxWidth: '600px', margin: '40px auto', padding: '0 20px', position: 'relative' }}>
-      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--color-ink-black)', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>
+      <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--color-forest-ink)', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>
         <ChevronLeft size={20} /> RETOUR
       </Link>
 
-      <h2 className="hero-display" style={{ fontSize: '60px', marginBottom: '20px', textAlign: 'center', color: 'var(--color-hi-vis-yellow)' }}>
+      <h2 className="hero-display" style={{ fontSize: '60px', marginBottom: '20px', textAlign: 'center', color: 'var(--color-lipstick-magenta)' }}>
         MODIFIER
       </h2>
       
@@ -102,23 +102,23 @@ const EditMovie = () => {
         </div>
 
         <div>
-          <label>REMPLACER L'AFFICHE (FACULTATIF)</label>
-          <div style={{ border: '2px dashed var(--color-ink-black)', padding: '20px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
+          <label>AFFICHE (FILM POSTER)</label>
+          <div style={{ border: '2px dashed var(--color-forest-ink)', padding: '20px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
             <input type="file" accept="image/*" onChange={(e) => setPosterFile(e.target.files[0])} style={{ border: 'none', padding: 0 }} />
           </div>
         </div>
 
         <div>
-          <label>REMPLACER LA PRÉSENTATION PDF (FACULTATIF)</label>
-          <div style={{ border: '2px dashed var(--color-ink-black)', padding: '40px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
-            <UploadCloud size={32} color="var(--color-ink-black)" style={{ marginBottom: '10px' }} />
+          <label>NOUVELLE PRÉSENTATION (PDF)</label>
+          <div style={{ border: '2px dashed var(--color-forest-ink)', padding: '40px', textAlign: 'center', borderRadius: 'var(--radius-cards)', background: 'rgba(0,0,0,0.03)' }}>
+            <UploadCloud size={32} color="var(--color-forest-ink)" style={{ marginBottom: '10px' }} />
             <br />
             <input type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files[0])} style={{ border: 'none', padding: 0 }} />
           </div>
         </div>
 
-        <button type="submit" className="gate-pill-btn" disabled={loading} style={{ marginTop: '20px', background: 'var(--color-ink-black)', color: 'var(--color-bone-white)', width: '100%' }}>
-          {loading ? 'SAUVEGARDE...' : 'METTRE À JOUR'}
+        <button type="submit" className="gate-pill-btn" disabled={loading} style={{ marginTop: '20px', background: 'var(--color-forest-ink)', color: 'var(--color-warm-chalk)', width: '100%' }}>
+          {loading ? 'MISE À JOUR...' : 'METTRE À JOUR'}
         </button>
       </form>
     </div>

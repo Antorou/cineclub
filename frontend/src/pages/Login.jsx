@@ -17,11 +17,11 @@ const Login = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <form onSubmit={handleLogin} className="dark-text-card" style={{ width: '100%', maxWidth: '420px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <form onSubmit={handleLogin} className="dark-text-card" style={{ maxWidth: '400px', margin: '100px auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
-        <h2 className="hero-display" style={{ fontSize: '60px', margin: 0, textAlign: 'center', color: 'var(--color-ink-black)' }}>ACCÈS PRIVÉ</h2>
+        <h2 className="hero-display" style={{ fontSize: '60px', margin: 0, textAlign: 'center', color: 'var(--color-lipstick-magenta)' }}>ACCÈS PRIVÉ</h2>
         
-        {error && <div className="mono-text" style={{ color: 'var(--color-firecracker-red)', textAlign: 'center' }}>{error}</div>}
+        {error && <div className="mono-text" style={{ color: 'var(--color-lipstick-magenta)', textAlign: 'center' }}>{error}</div>}
 
         <div>
           <label>CHOISIR UN PROFIL</label>
@@ -29,10 +29,10 @@ const Login = () => {
             value={username} 
             onChange={(e) => setUsername(e.target.value)}
             style={{ 
-              width: '100%', padding: '12px', borderRadius: 'var(--radius-cards)', 
-              border: '1px solid var(--color-ink-black)', background: 'transparent', 
-              color: 'var(--color-ink-black)', fontFamily: 'var(--font-degularvariable)',
-              fontSize: '16px'
+              width: '100%', padding: '12px',
+              border: '1px solid var(--color-forest-ink)', background: 'transparent', 
+              color: 'var(--color-forest-ink)', fontFamily: 'var(--font-clash-grotesk)',
+              textAlign: 'center', borderRadius: 'var(--radius-cards)'
             }}
           >
             <option value="Antoine">Antoine</option>
@@ -50,13 +50,15 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit" className="gate-pill-btn" style={{ 
-          marginTop: '20px', 
-          width: '100%', 
-          background: 'var(--color-dusk-violet)', 
-          color: 'var(--color-bone-white)' 
-        }}>
-          S'IDENTIFIER
+        <button 
+          onClick={handleLogin}
+          className="gate-pill-btn"
+          style={{ 
+            width: '100%', 
+            background: 'var(--color-lipstick-magenta)', 
+            color: 'var(--color-warm-chalk)' 
+          }}
+        >  S'IDENTIFIER
         </button>
       </form>
     </div>

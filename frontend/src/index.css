@@ -1,43 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Clash+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/beni'); /* Fallbacks used if not loaded */
 
 :root {
-  /* Colors - "Nouvelle Vague" Palette */
-  --color-dusk-violet: #F4F4F9; /* Fond - Lait / Gris très clair */
-  --color-hi-vis-yellow: #D90429; /* Accent - Rouge Cinémathèque (Carmin) */
-  --color-buttery-yellow: #2B2D42; /* Accent 2 - Noir Asphalte */
-  --color-lilac-shadow: #EDF2F4; 
-  --color-bubblegum-pink: #EDF2F4; /* Carte 1 - Gris Neige */
-  --color-matcha-cream: #E2EAFC; /* Carte 2 - Bleu-Gris Pâle */
-  --color-magenta-punch: #FFE5D9; /* Carte 3 - Blanc Rosé Pâle */
-  --color-firecracker-red: #D8E2DC; /* Carte 4 - Kaki Pâle */
-  --color-bone-white: #FFFFFF; /* Fond des cartes/formulaires - Blanc Pur */
-  --color-ink-black: #0B090A; /* Texte principal - Noir Vrai */
-  --color-pure-black: #000000;
+  /* Colors */
+  --color-lipstick-magenta: #db3c8a;
+  --color-forest-ink: #00522d;
+  --color-blush-cream: #fce5df;
+  --color-warm-chalk: #fff8f6;
+  --color-charcoal-black: #000000;
+  --color-lilac-mist: #d1cfe4;
+  --color-bubblegum: #f29ebd;
+  --color-cotton-pink: #e878b2;
 
   /* Typography — Font Families */
-  --font-obviouslyvariable: 'Anton', ui-sans-serif, system-ui, sans-serif;
-  --font-degularvariable: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-bergenmonoregular: 'JetBrains Mono', ui-monospace, monospace;
-  --font-degulardisplay-bold: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-beni: 'Beni', ui-sans-serif, system-ui, sans-serif;
+  --font-clash-grotesk: 'Clash Grotesk', ui-sans-serif, system-ui, sans-serif;
 
-  /* Base scales */
-  --spacing-unit: 4px;
-  --radius-tags: 100px;
-  --radius-cards: 6px;
-  --radius-buttons: 100px;
+  /* Typography — Scale */
+  --text-micro: 10px;
+  --text-label: 12px;
+  --text-caption: 14px;
+  --text-body-sm: 16px;
+  --text-body: 20px;
+  --text-subheading: 46px;
+  --text-heading-sm: 80px;
+  --text-heading: 94px;
+  --text-heading-lg: 130px;
+  --text-display: 230px;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-20: 20px;
+  --spacing-60: 60px;
+  --spacing-120: 120px;
+  --spacing-140: 140px;
+
+  /* Border Radius */
+  --radius-lg: 10px;
+  --radius-2xl: 20px;
+  --radius-3xl: 25px;
+
+  /* Named Radii */
+  --radius-tags: 9999px;
+  --radius-cards: 20px;
+  --radius-badges: 10px;
+  --radius-buttons: 10px;
+  --radius-elevated: 25px;
+  --radius-iconbuttons: 9999px;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-feature-settings: "calt" 0;
 }
 
 body {
-  font-family: var(--font-degularvariable);
-  background-color: var(--color-dusk-violet);
-  color: var(--color-ink-black);
+  font-family: var(--font-clash-grotesk);
+  background-color: var(--color-warm-chalk);
+  color: var(--color-forest-ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,121 +67,90 @@ body {
 /* Base App Layout */
 .app-container {
   width: 100%;
-  padding-bottom: 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: 120px;
 }
 
 /* Typography Utility Classes */
 h1, .hero-display {
-  font-family: var(--font-obviouslyvariable);
-  font-weight: 400;
-  line-height: 0.85;
-  letter-spacing: 0.02em;
+  font-family: var(--font-beni);
+  font-weight: 900;
+  line-height: 0.70;
   text-transform: uppercase;
 }
 
-.mono-text {
-  font-family: var(--font-bergenmonoregular);
-  line-height: 0.8;
+.mono-text, .mono-label {
+  font-family: var(--font-clash-grotesk);
+  font-weight: 500;
 }
 
-/* UI Elements */
 a {
   text-decoration: none;
 }
 
-/* Gate Pill Button */
-.gate-pill-btn {
-  background-color: var(--color-bone-white);
-  color: var(--color-pure-black);
-  border-radius: var(--radius-buttons);
-  padding: 17px 24px;
-  font-family: var(--font-degulardisplay-bold);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.05em;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s ease;
-}
-.gate-pill-btn:hover { transform: translateY(-2px); }
-.gate-pill-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* Outlined Display Button */
-.display-outline-btn {
-  background-color: transparent;
-  color: var(--color-hi-vis-yellow);
-  border: 3px solid var(--color-hi-vis-yellow);
-  border-radius: var(--radius-buttons);
-  padding: 14px 24px;
-  font-family: var(--font-degulardisplay-bold);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.display-outline-btn:hover { background-color: rgba(244, 237, 54, 0.1); }
-
-/* Underlined Text Link */
-.underline-link {
-  color: var(--color-bone-white);
-  font-family: var(--font-bergenmonoregular);
-  font-size: 12px;
-  line-height: 0.8;
-  letter-spacing: 0.05em;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-}
-
-/* Cards */
-.confetti-card {
-  border-radius: var(--radius-cards);
-  padding: 17px;
-  background-color: var(--color-bone-white);
-  border: none;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-}
-
+/* Form Elements */
 .dark-text-card {
   border-radius: var(--radius-cards);
-  padding: 17px;
-  background-color: var(--color-bone-white);
-  color: var(--color-ink-black);
+  padding: 30px;
+  background-color: var(--color-warm-chalk); /* We don't really do heavy cards here, so just keep it minimal */
+  color: var(--color-forest-ink);
 }
 
-/* Form Elements inside dark-text-card */
 .dark-text-card input {
-  font-family: var(--font-degularvariable);
+  font-family: var(--font-clash-grotesk);
   padding: 12px;
-  border-radius: var(--radius-cards);
-  border: 1px solid var(--color-ink-black);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-forest-ink);
   background: transparent;
-  color: var(--color-ink-black);
+  color: var(--color-forest-ink);
   width: 100%;
 }
 .dark-text-card label {
-  font-weight: bold;
-  font-family: var(--font-degulardisplay-bold);
+  font-weight: 500;
+  font-size: var(--text-label);
   margin-bottom: 4px;
   display: block;
 }
 
-/* Mono Label Tag */
-.mono-label {
-  font-family: var(--font-bergenmonoregular);
-  font-size: 12px;
-  line-height: 0.8;
-  letter-spacing: 0.05em;
-  padding: 6px 12px;
-  border-radius: var(--radius-tags);
-  border: 1px solid currentColor;
-  display: inline-block;
-  text-transform: uppercase;
+/* Circular Menu Trigger & Pill logic */
+.gate-pill-btn {
+  background-color: var(--color-lipstick-magenta);
+  color: var(--color-warm-chalk);
+  border-radius: var(--radius-buttons);
+  padding: 12px 24px;
+  font-family: var(--font-clash-grotesk);
+  font-weight: 700;
+  font-size: var(--text-body-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
 }
+.gate-pill-btn:hover { opacity: 0.9; }
+.gate-pill-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.display-outline-btn {
+  background-color: transparent;
+  color: var(--color-forest-ink);
+  border-radius: var(--radius-buttons);
+  padding: 12px 24px;
+  font-family: var(--font-clash-grotesk);
+  font-weight: 700;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* No borders in this design! */
+}
+.display-outline-btn:hover { color: var(--color-lipstick-magenta); }
+
+.underline-link {
+  color: var(--color-forest-ink);
+  font-size: var(--text-body-sm);
+  text-decoration: underline;
+}
+.underline-link:hover { color: var(--color-lipstick-magenta); }

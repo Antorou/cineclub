@@ -113,7 +113,7 @@ const Scorecard = ({ movie, token, activeUser }) => {
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
         <button type="submit" disabled={loading} style={{
-          background: 'currentColor', color: 'var(--color-bone-white)',
+          background: 'currentColor', color: 'var(--color-warm-chalk)',
           padding: '8px 16px', borderRadius: '100px', fontSize: '12px',
           fontFamily: 'var(--font-degulardisplay-bold)', flex: 1, border: 'none', cursor: 'pointer'
         }}>

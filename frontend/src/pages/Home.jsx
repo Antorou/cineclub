@@ -9,12 +9,10 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-// Confetti Card Colors Array
-const CONFETTI_COLORS = [
-  'var(--color-bubblegum-pink)',
-  'var(--color-matcha-cream)',
-  'var(--color-magenta-punch)',
-  'var(--color-firecracker-red)'
+const HIGHLIGHT_COLORS = [
+  'var(--color-lipstick-magenta)',
+  'var(--color-bubblegum)',
+  'var(--color-blush-cream)'
 ];
 
 const Home = () => {
@@ -105,158 +103,148 @@ const Home = () => {
     <div style={{ width: '100%', overflowX: 'hidden' }}>
 
       {/* Hero Section */}
-      <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '80px', position: 'relative' }}>
-        <h2 className="hero-display" style={{
-          fontSize: 'clamp(80px, 15vw, 244px)', // Responsive text sizing keeping the massive poster scale
-          margin: 0,
-          color: 'var(--color-hi-vis-yellow)',
-          padding: '0 20px',
-          position: 'relative',
-          zIndex: 2
-        }}>
-          SUNDAY<br /><span style={{ color: 'var(--color-buttery-yellow)'}}>CINECLUB</span>
-        </h2>
-
-        {/* Cartoon Mascot Placeholder */}
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-30%, -60%)', zIndex: 1 }}>
-           <svg width="250" height="250" viewBox="0 0 100 100" fill="var(--color-bone-white)" stroke="var(--color-ink-black)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              {/* Rabbit 1 (Left) */}
-              <ellipse cx="28" cy="35" rx="4.5" ry="16" transform="rotate(-15 28 35)" />
-              <ellipse cx="42" cy="35" rx="4.5" ry="16" transform="rotate(10 42 35)" />
-              <ellipse cx="35" cy="75" rx="18" ry="22" />
-              <circle cx="35" cy="55" r="14" />
-              <circle cx="29" cy="53" r="1.5" fill="var(--color-ink-black)" stroke="none" />
-              <circle cx="41" cy="53" r="1.5" fill="var(--color-ink-black)" stroke="none" />
-              <path d="M 33 58 Q 35 60 37 58" fill="none" />
-              <path d="M 35 56 V 58" fill="none" />
-              <line x1="14" y1="52" x2="20" y2="54" strokeWidth="1" />
-              <line x1="13" y1="56" x2="20" y2="56" strokeWidth="1" />
-              <line x1="50" y1="54" x2="56" y2="52" strokeWidth="1" />
-              <line x1="50" y1="56" x2="57" y2="56" strokeWidth="1" />
-              
-              {/* Rabbit 2 (Right, leaning slightly) */}
-              <ellipse cx="58" cy="45" rx="3.5" ry="13" transform="rotate(-20 58 45)" />
-              <ellipse cx="70" cy="42" rx="3.5" ry="13" transform="rotate(25 70 42)" />
-              <ellipse cx="65" cy="80" rx="14" ry="18" />
-              <circle cx="65" cy="62" r="11" />
-              <circle cx="60" cy="60" r="1.3" fill="var(--color-ink-black)" stroke="none" />
-              <circle cx="70" cy="60" r="1.3" fill="var(--color-ink-black)" stroke="none" />
-              <path d="M 63 64 Q 65 66 67 64" fill="none" />
-              <path d="M 65 63 V 64" fill="none" />
-              <line x1="49" y1="59" x2="54" y2="60" strokeWidth="1" />
-              <line x1="76" y1="60" x2="81" y2="59" strokeWidth="1" />
-           </svg>
+      <div style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 40px', paddingBottom: '120px' }}>
+        <div style={{ marginBottom: '20px' }}>
+          <span className="mono-label" style={{ fontSize: 'var(--text-caption)', color: 'var(--color-forest-ink)', letterSpacing: '0.05em' }}>
+            AGENCE FOUDRE PRÉSENTE
+          </span>
         </div>
+        
+        <h1 className="hero-display" style={{
+          fontSize: 'clamp(80px, 15vw, 230px)',
+          margin: 0,
+          color: 'var(--color-lipstick-magenta)',
+          textAlign: 'left',
+          wordWrap: 'break-word',
+          maxWidth: '100%'
+        }}>
+          SUNDAY<br/>CINECLUB
+        </h1>
 
-        <div style={{ marginTop: '40px', position: 'relative', zIndex: 3 }}>
-          <Link to="/upload" className="display-outline-btn">
-            AJOUTE TON FILM
+        <div style={{ marginTop: '40px' }}>
+          <Link to="/upload" className="underline-link" style={{ fontSize: 'var(--text-body)', fontWeight: 500 }}>
+            AJOUTE TON FILM &rarr;
           </Link>
         </div>
       </div>
 
-      {/* Grid Section */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-        gap: '40px',
-        padding: '0 40px',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
-
-        {loading ? (
-          <p className="mono-text" style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'var(--color-bone-white)' }}>CHARGEMENT...</p>
-        ) : movies.length === 0 ? (
-          <div className="dark-text-card" style={{ gridColumn: '1 / -1', textAlign: 'center', background: 'transparent', border: '3px dashed var(--color-bone-white)', color: 'var(--color-bone-white)' }}>
-            <p className="mono-text" style={{ fontSize: '16px' }}>AUCUNE PRÉSENTATION. AJOUTEZ LA PREMIÈRE !</p>
-          </div>
-        ) : (
-          movies.map((movie, index) => {
-            // Pick a confetti color based on the index
-            const surfaceColor = CONFETTI_COLORS[index % CONFETTI_COLORS.length];
-            // All cards are now dark, so we force light text.
-            const textColor = 'var(--color-ink-black)';
+      {loading ? (
+        <div style={{ padding: '0 40px', minHeight: '50vh' }}>
+          <p className="mono-text" style={{ fontSize: 'var(--text-body)', color: 'var(--color-forest-ink)' }}>CHARGEMENT...</p>
+        </div>
+      ) : movies.length === 0 ? (
+        <div style={{ padding: '0 40px', minHeight: '50vh' }}>
+          <p className="mono-text" style={{ fontSize: 'var(--text-body)', color: 'var(--color-forest-ink)' }}>AUCUNE PRÉSENTATION.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {movies.map((movie, index) => {
+            const headlineColor = HIGHLIGHT_COLORS[index % HIGHLIGHT_COLORS.length];
+            const alignment = index % 2 === 0 ? 'flex-start' : 'flex-end';
 
             return (
-              <div key={movie.id} className="confetti-card" style={{ backgroundColor: surfaceColor, color: textColor }}>
-                <h3 className="hero-display" style={{ fontSize: '40px', margin: '0 0 10px 0', lineHeight: 1 }}>{movie.title}</h3>
-
-                {movie.poster_url && (
-                  <div style={{ width: '100%', height: '300px', marginBottom: '20px', borderRadius: '4px', overflow: 'hidden', border: `2px solid ${textColor}` }}>
-                    <img src={movie.poster_url} alt={movie.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div key={movie.id} style={{
+                position: 'relative',
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: alignment,
+                padding: '120px 40px',
+                borderTop: '1px solid var(--color-blush-cream)'
+              }}>
+                
+                <div style={{ maxWidth: '800px', width: '100%' }}>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    <span style={{ 
+                      fontFamily: 'var(--font-clash-grotesk)', fontWeight: 500, fontSize: 'var(--text-label)', 
+                      backgroundColor: 'var(--color-blush-cream)', color: 'var(--color-forest-ink)', 
+                      padding: '7px 15px', borderRadius: '9999px', textTransform: 'uppercase'
+                    }}>
+                      {movie.genre || 'FILM'}
+                    </span>
+                    {movie.date && (
+                      <span style={{ 
+                        fontFamily: 'var(--font-clash-grotesk)', fontWeight: 500, fontSize: 'var(--text-label)', 
+                        color: 'var(--color-forest-ink)', padding: '7px 0', textTransform: 'uppercase'
+                      }}>
+                        {new Date(movie.date).toLocaleDateString()}
+                      </span>
+                    )}
                   </div>
-                )}
 
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '40px', flexWrap: 'wrap' }}>
-                  <span className="mono-label" style={{ borderColor: textColor }}>{movie.genre || 'AUCUN'}</span>
-                  {movie.date && <span className="mono-label" style={{ borderColor: textColor, backgroundColor: 'rgba(0,0,0,0.05)' }}>{new Date(movie.date).toLocaleDateString()}</span>}
-                  <span className="mono-label" style={{ backgroundColor: 'transparent', border: '1px solid transparent' }}>PAR <strong style={{ fontFamily: 'var(--font-degulardisplay-bold)' }}>{movie.presenter}</strong></span>
-                </div>
+                  <h2 className="hero-display" style={{ 
+                    fontSize: 'clamp(60px, 8vw, 130px)', 
+                    color: headlineColor, 
+                    margin: '0 0 40px 0' 
+                  }}>
+                    {movie.title}
+                  </h2>
 
-                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                   <span className="mono-label" style={{ background: textColor, color: surfaceColor, borderColor: textColor }}>
-                      ★ {(movie.antoine_score !== null && movie.antoine_score !== undefined || movie.lea_score !== null && movie.lea_score !== undefined)
+                  {movie.poster_url && (
+                    <div style={{ width: '100%', marginBottom: '40px' }}>
+                      <img src={movie.poster_url} alt={movie.title} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', maxWidth: '60ch' }}>
+                    <p style={{ fontFamily: 'var(--font-clash-grotesk)', fontSize: 'var(--text-body)', lineHeight: 1.2, color: 'var(--color-forest-ink)' }}>
+                      Sélectionné et présenté par <strong style={{ fontWeight: 700 }}>{movie.presenter}</strong>. 
+                      Ce film a reçu une note moyenne de <strong style={{ fontWeight: 700 }}>
+                      {(movie.antoine_score !== null && movie.antoine_score !== undefined || movie.lea_score !== null && movie.lea_score !== undefined)
                          ? (((movie.antoine_score || 0) + (movie.lea_score || 0)) / ((movie.antoine_score !== null && movie.antoine_score !== undefined ? 1 : 0) + (movie.lea_score !== null && movie.lea_score !== undefined ? 1 : 0))).toFixed(1)
                          : 'N/A'}
-                   </span>
+                      </strong>.
+                    </p>
+                    
+                    <Scorecard movie={movie} token={token} activeUser={activeUser} />
 
-                   <div style={{ display: 'flex', gap: '8px' }}>
-                     {activeUser === movie.presenter && (
-                       <>
-                         <Link
-                           to={`/edit/${movie.id}`}
-                           state={{ movie }}
-                           style={{ padding: '8px', color: textColor, opacity: 0.7 }}
-                         >
-                           <Pencil size={18} />
-                         </Link>
-                         <button
-                           onClick={() => handleDelete(movie.id)}
-                           style={{ padding: '8px', background: 'transparent', border: 'none', cursor: 'pointer', color: textColor, opacity: 0.7 }}
-                         >
-                           <Trash2 size={18} />
-                         </button>
-                       </>
-                     )}
-                     {movie.diaporama_url && (
-                       <button
-                         onClick={() => {
-                            setSelectedPdfUrl(movie.diaporama_url);
-                            setSelectedPdfTitle(movie.title);
-                            setPageNumber(1);
-                            setPdfError(null);
-                         }}
-                         className="gate-pill-btn"
-                         style={{ padding: '8px 16px', fontSize: '12px' }}
-                       >
-                         VOIR
-                       </button>
-                     )}
-                   </div>
-                </div>
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                      {movie.diaporama_url && (
+                        <button
+                          onClick={() => {
+                             setSelectedPdfUrl(movie.diaporama_url);
+                             setSelectedPdfTitle(movie.title);
+                             setPageNumber(1);
+                             setPdfError(null);
+                          }}
+                          className="gate-pill-btn"
+                        >
+                          VOIR LA PRÉSENTATION
+                        </button>
+                      )}
+                      
+                      {activeUser === movie.presenter && (
+                        <>
+                          <Link to={`/edit/${movie.id}`} state={{ movie }} style={{ color: 'var(--color-forest-ink)', padding: '10px' }}>
+                            <Pencil size={20} />
+                          </Link>
+                          <button onClick={() => handleDelete(movie.id)} style={{ padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-forest-ink)' }}>
+                            <Trash2 size={20} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
 
-                {/* Embedded simplified scorecard */}
-                <div style={{ marginTop: '20px', borderTop: `1px solid ${textColor}`, paddingTop: '20px', opacity: 0.9 }}>
-                  <Scorecard movie={movie} token={token} activeUser={activeUser} />
                 </div>
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
 
       {/* PDF Modal Viewer */}
       {selectedPdfUrl && (
         <div ref={viewerRef} style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'var(--color-ink-black)', zIndex: 1000,
-          display: 'flex', flexDirection: 'column', padding: '17px'
+          backgroundColor: 'var(--color-warm-chalk)', zIndex: 1000,
+          display: 'flex', flexDirection: 'column', padding: '30px'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '17px', alignItems: 'center' }}>
-            <h3 className="hero-display" style={{ color: 'var(--color-hi-vis-yellow)', fontSize: '30px', margin: 0 }}>{selectedPdfTitle}</h3>
-            <div style={{ display: 'flex', gap: '17px' }}>
-              <button onClick={toggleFullscreen} className="gate-pill-btn" style={{ padding: '8px 16px', fontSize: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
+            <h3 className="hero-display" style={{ color: 'var(--color-lipstick-magenta)', fontSize: '46px', margin: 0 }}>{selectedPdfTitle}</h3>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={toggleFullscreen} className="display-outline-btn">
                 PLEIN ÉCRAN (F)
               </button>
               <button
@@ -265,56 +253,34 @@ const Home = () => {
                   if (document.fullscreenElement) document.exitFullscreen();
                 }}
                 className="gate-pill-btn"
-                style={{ padding: '8px 16px', fontSize: '14px' }}
               >
-                FERMER (Échap)
+                FERMER
               </button>
             </div>
           </div>
           <div style={{
-            flex: 1,
-            overflow: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'var(--color-bone-white)',
-            borderRadius: '6px',
-            position: 'relative'
+            flex: 1, overflow: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center',
+            backgroundColor: 'var(--color-blush-cream)', borderRadius: 'var(--radius-2xl)', position: 'relative'
           }}>
-            {pdfError && <div style={{ color: 'var(--color-firecracker-red)', textAlign: 'center', fontFamily: 'var(--font-degularvariable)' }}><h3>Échec du chargement du PDF</h3><p className="mono-text">{pdfError}</p></div>}
+            {pdfError && <div style={{ color: 'var(--color-lipstick-magenta)', textAlign: 'center' }}><h3 className="hero-display" style={{ fontSize: '46px' }}>ERREUR</h3><p className="mono-text">{pdfError}</p></div>}
             {!pdfError && (
               <Document
                 file={selectedPdfUrl}
                 onLoadSuccess={({ numPages }) => setNumPages(numPages)}
                 onLoadError={(error) => setPdfError(error.message)}
-                loading={<div className="mono-text" style={{ color: 'var(--color-ink-black)' }}>EN ATTENTE DU PDF...</div>}
+                loading={<div className="mono-text" style={{ color: 'var(--color-forest-ink)' }}>CHARGEMENT...</div>}
               >
-                <Page
-                  pageNumber={pageNumber}
-                  renderTextLayer={true}
-                  renderAnnotationLayer={true}
-                  className="pdf-page"
-                />
+                <Page pageNumber={pageNumber} renderTextLayer={true} renderAnnotationLayer={true} className="pdf-page" />
               </Document>
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '17px', marginTop: '17px', color: 'var(--color-bone-white)' }}>
-             <button
-               onClick={() => setPageNumber(p => Math.max(p - 1, 1))}
-               disabled={pageNumber <= 1}
-               className="display-outline-btn"
-               style={{ padding: '8px 16px' }}
-             >
-               <ChevronLeft size={18} /> PRÉC
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '20px' }}>
+             <button onClick={() => setPageNumber(p => Math.max(p - 1, 1))} disabled={pageNumber <= 1} className="display-outline-btn">
+               <ChevronLeft size={20} />
              </button>
-             <span className="mono-label" style={{ border: 'none', fontSize: '14px' }}>PAGE {pageNumber} SUR {numPages || '?'}</span>
-             <button
-               onClick={() => setPageNumber(p => Math.min(p + 1, numPages || 1))}
-               disabled={pageNumber >= (numPages || 1)}
-               className="display-outline-btn"
-               style={{ padding: '8px 16px' }}
-             >
-               SUIV <ChevronRight size={18} />
+             <span className="mono-label" style={{ color: 'var(--color-forest-ink)' }}>PAGE {pageNumber} SUR {numPages || '?'}</span>
+             <button onClick={() => setPageNumber(p => Math.min(p + 1, numPages || 1))} disabled={pageNumber >= (numPages || 1)} className="display-outline-btn">
+               <ChevronRight size={20} />
              </button>
           </div>
         </div>
@@ -324,3 +290,4 @@ const Home = () => {
 };
 
 export default Home;
+

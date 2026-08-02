@@ -1,37 +1,39 @@
+import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const { activeUser, logout } = useContext(UserContext);
 
-  if (!activeUser) return null;
-
   return (
-    <header style={{
-      textAlign: 'center',
-      padding: '17px',
-      position: 'relative'
-    }}>
+    <>
       <Link to="/" style={{
-        fontFamily: 'var(--font-obviouslyvariable)',
-        fontSize: '30px',
-        color: 'var(--color-hi-vis-yellow)',
-        lineHeight: 1,
-        letterSpacing: '0.02em',
-        textTransform: 'uppercase',
-        display: 'inline-block'
+        position: 'fixed', top: '40px', right: '40px', width: '50px', height: '50px',
+        backgroundColor: 'var(--color-lipstick-magenta)', borderRadius: '9999px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
+        color: 'var(--color-warm-chalk)', fontWeight: 700, fontSize: '24px',
+        boxShadow: 'none', border: 'none'
       }}>
-        lapinous
+        ⚡
       </Link>
-      <button
-        onClick={logout}
-        className="underline-link"
-        style={{ position: 'absolute', right: '17px', top: '27px', background: 'transparent', border: 'none', cursor: 'pointer' }}
-      >
-        DÉCONNEXION [{activeUser}]
-      </button>
-    </header>
+      
+      <div style={{
+        position: 'fixed', top: '40px', left: '40px', width: '50px', height: '50px',
+        backgroundColor: 'var(--color-lipstick-magenta)', borderRadius: '9999px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
+        color: 'var(--color-warm-chalk)'
+      }}>
+        {activeUser ? (
+          <button onClick={logout} style={{ background: 'transparent', border: 'none', color: 'inherit', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-clash-grotesk)' }}>
+            X
+          </button>
+        ) : (
+          <Link to="/login" style={{ color: 'inherit', fontWeight: 700, textDecoration: 'none', fontFamily: 'var(--font-clash-grotesk)' }}>
+            O
+          </Link>
+        )}
+      </div>
+    </>
   );
 };
 
